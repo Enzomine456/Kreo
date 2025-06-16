@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kreo Lab</title>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: #222;
+    }
+
+    .calculator {
+      background: #f9f9f9;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      width: 350px;
+      color: #222;
+    }
+
+    .calculator h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+      font-weight: 700;
+      color: #111;
+    }
+
+    .screen {
+      background: #e6e6e6;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      text-align: right;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      min-height: 50px;
+      color: #111;
+      user-select: none;
+      word-wrap: break-word;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+    }
+
+    button {
+      padding: 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1.3rem;
+      background-color: #fff;
+      color: #222;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+
+    button:hover {
+      background-color: #f0f0f0;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    .operator {
+      color: #007bff;
+      font-weight: 600;
+    }
+
+    .icon-btn i {
+      font-size: 1.4rem;
+    }
+
+    .history {
+      background: #f0f0f0;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      max-height: 100px;
+      overflow-y: auto;
+      color: #444;
+      box-shadow: inset 0 0 5px #ddd;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h1><i class='bx bx-calculator'></i>Kreo Lab</h1>
+    <div class="screen" id="screen">0</div>
+    <div class="buttons">
+      <button class="icon-btn" onclick="clearScreen()" title="Limpar Tudo"><i class='bx bx-refresh'></i></button>
+      <button class="icon-btn" onclick="deleteLast()" title="Apagar último"><i class='bx bx-arrow-back'></i></button>
+      <button class="operator" onclick="append('/')" title="Divisão"><i class='bx bx-division'></i></button>
+      <button class="operator" onclick="append('*')" title="Multiplicação"><i class='bx bx-x'></i></button>
+
+      <button onclick="append('7')">7</button>
+      <button onclick="append('8')">8</button>
+      <button onclick="append('9')">9</button>
+      <button class="operator" onclick="append('-')" title="Subtração"><i class='bx bx-minus'></i></button>
+
+      <button onclick="append('4')">4</button>
+      <button onclick="append('5')">5</button>
+      <button onclick="append('6')">6</button>
+      <button class="operator" onclick="append('+')" title="Soma"><i class='bx bx-plus'></i></button>
+
+      <button onclick="append('1')">1</button>
+      <button onclick="append('2')">2</button>
+      <button onclick="append('3')">3</button>
+      <button class="operator" onclick="calculate()" title="Calcular"><i class='bx bx-equalizer'></i></button>
+
+      <button onclick="append('0')">0</button>
+      <button onclick="append('.')">.</button>
+      <button class="icon-btn" onclick="append('(')" title="Parêntese esquerdo"><i class='bx bx-left-arrow-alt'></i></button>
+      <button class="icon-btn" onclick="append(')')" title="Parêntese direito"><i class='bx bx-right-arrow-alt'></i></button>
+    </div>
+    <div class="history" id="history">
+      <strong>Histórico:</strong><br/>
+    </div>
+  </div>
+
+  <script>
+    const screen = document.getElementById("screen");
+    const history = document.getElementById("history");
+
+    function append(value) {
+      if (screen.innerText === "0" || screen.innerText === "Erro") {
+        screen.innerText = value;
+      } else {
+        screen.innerText += value;
+      }
+    }
+
+    function clearScreen() {
+      screen.innerText = "0";
+    }
+
+    function deleteLast() {
+      if(screen.innerText.length > 1){
+        screen.innerText = screen.innerText.slice(0, -1);
+      } else {
+        screen.innerText = "0";
+      }
+    }
+
+    function calculate() {
+      try {
+        const expression = screen.innerText;
+        // Usar Function para evitar problemas com eval diretos
+        const result = Function('"use strict";return (' + expression + ')')();
+        screen.innerText = result;
+        history.innerHTML += `${expression} = ${result}<br/>`;
+        history.scrollTop = history.scrollHeight;
+      } catch (e) {
+        screen.innerText = "Erro";
+      }
+    }
+  </script>
+</body>
+</html>
